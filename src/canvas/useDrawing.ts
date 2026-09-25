@@ -23,7 +23,7 @@ export function useDrawing() {
     const tool = useEditorStore.getState().activeTool
     if (tool === 'select' || tool === 'text') return
 
-    const pos = stage.getPointerPosition()
+    const pos = stage.getRelativePointerPosition()
     if (!pos) return
 
     useEditorStore.getState().setSelectedId(null)
@@ -73,7 +73,7 @@ export function useDrawing() {
     if (!id) return
     const stage = e.target.getStage()
     if (!stage) return
-    const pos = stage.getPointerPosition()
+    const pos = stage.getRelativePointerPosition()
     if (!pos) return
 
     const tool = useEditorStore.getState().activeTool

@@ -11,13 +11,13 @@ export function StyleBar() {
   const showFontSize = activeTool === 'text'
 
   return (
-    <div className="flex items-center gap-4 rounded-panel border border-line bg-surface px-4 py-2 shadow-panel">
-      <div className="flex items-center gap-1.5">
+    <div className="flex items-center gap-3 overflow-x-auto rounded-panel border border-line bg-surface px-3 py-2 shadow-panel md:gap-4 md:px-4">
+      <div className="flex shrink-0 items-center gap-1.5">
         {SWATCHES.map((color) => (
           <button
             key={color}
             onClick={() => setStyle({ stroke: color })}
-            className={`h-6 w-6 rounded-full border-2 transition-transform duration-150 ${
+            className={`h-6 w-6 shrink-0 rounded-full border-2 transition-transform duration-150 ${
               style.stroke === color ? 'scale-110 border-accent' : 'border-line'
             }`}
             style={{ backgroundColor: color }}
@@ -25,9 +25,9 @@ export function StyleBar() {
         ))}
       </div>
 
-      <div className="h-6 w-px bg-line" />
+      <div className="h-6 w-px shrink-0 bg-line" />
 
-      <label className="flex items-center gap-2 text-xs text-muted">
+      <label className="flex shrink-0 items-center gap-2 text-xs text-muted">
         Tebal
         <input
           type="range"
@@ -35,16 +35,16 @@ export function StyleBar() {
           max={20}
           value={style.strokeWidth}
           onChange={(e) => setStyle({ strokeWidth: Number(e.target.value) })}
-          className="accent-accent"
+          className="w-20 accent-accent md:w-auto"
         />
       </label>
 
       {showFill && (
         <>
-          <div className="h-6 w-px bg-line" />
+          <div className="h-6 w-px shrink-0 bg-line" />
           <button
             onClick={() => setStyle({ fill: style.fill === 'transparent' ? style.stroke : 'transparent' })}
-            className="rounded-md border border-line px-2 py-1 text-xs text-muted hover:text-fg"
+            className="shrink-0 whitespace-nowrap rounded-md border border-line px-2 py-1 text-xs text-muted hover:text-fg"
           >
             {style.fill === 'transparent' ? 'Isi: kosong' : 'Isi: warna'}
           </button>
@@ -53,8 +53,8 @@ export function StyleBar() {
 
       {showFontSize && (
         <>
-          <div className="h-6 w-px bg-line" />
-          <label className="flex items-center gap-2 text-xs text-muted">
+          <div className="h-6 w-px shrink-0 bg-line" />
+          <label className="flex shrink-0 items-center gap-2 text-xs text-muted">
             Ukuran
             <input
               type="range"
@@ -62,7 +62,7 @@ export function StyleBar() {
               max={64}
               value={style.fontSize}
               onChange={(e) => setStyle({ fontSize: Number(e.target.value) })}
-              className="accent-accent"
+              className="w-20 accent-accent md:w-auto"
             />
           </label>
         </>

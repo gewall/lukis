@@ -17,7 +17,7 @@ export function Toolbar() {
   const setActiveTool = useEditorStore((s) => s.setActiveTool)
 
   return (
-    <div className="flex flex-col gap-1 rounded-panel border border-line bg-surface p-2 shadow-panel">
+    <div className="flex gap-0.5 rounded-panel border border-line bg-surface p-1.5 shadow-panel md:flex-col md:gap-1 md:p-2">
       {TOOLS.map(({ id, icon: Icon, label, key }) => (
         <button
           key={id}

@@ -6,6 +6,8 @@ interface Props {
   selectedNode: Konva.Node | null
 }
 
+const coarsePointer = window.matchMedia('(pointer: coarse)').matches
+
 export function SelectionLayer({ selectedNode }: Props) {
   const trRef = useRef<Konva.Transformer>(null)
 
@@ -23,11 +25,11 @@ export function SelectionLayer({ selectedNode }: Props) {
   return (
     <Transformer
       ref={trRef}
-      rotateAnchorOffset={24}
+      rotateAnchorOffset={coarsePointer ? 32 : 24}
       borderStroke="#38bdf8"
       anchorStroke="#38bdf8"
       anchorFill="#0b0f14"
-      anchorSize={9}
+      anchorSize={coarsePointer ? 16 : 9}
       borderStrokeWidth={1.5}
       flipEnabled={false}
       boundBoxFunc={(oldBox, newBox) => {

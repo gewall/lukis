@@ -6,16 +6,18 @@ import { ShapeRenderer } from './ShapeRenderer'
 import { SelectionLayer } from './SelectionLayer'
 import { useDrawing } from './useDrawing'
 import type { Shape, TextShape } from '../types/shapes'
+import type { FitSize } from './useFitSize'
 
 interface Props {
   stageRef: React.RefObject<Konva.Stage | null>
+  fitSize: FitSize
 }
 
 function newId() {
   return Math.random().toString(36).slice(2, 10)
 }
 
-export function CanvasStage({ stageRef }: Props) {
+export function CanvasStage({ stageRef, fitSize }: Props) {
   const shapes = useEditorStore((s) => s.shapes)
   const selectedId = useEditorStore((s) => s.selectedId)
   const activeTool = useEditorStore((s) => s.activeTool)
@@ -26,6 +28,9 @@ export function CanvasStage({ stageRef }: Props) {
   const updateShape = useEditorStore((s) => s.updateShape)
   const addShape = useEditorStore((s) => s.addShape)
   const commit = useEditorStore((s) => s.commit)
+
+  // Shrink the stage to fit small screens; shapes keep full-resolution coordinates.
+  const scale = Math.max(0.1, Math.min(1, fitSize.width / canvasSize.width, fitSize.height / canvasSize.height))
 
   const nodesRef = useRef<Map<string, Konva.Node>>(new Map())
   const [, forceUpdate] = useState(0)
@@ -83,16 +88,18 @@ export function CanvasStage({ stageRef }: Props) {
   return (
     <div
       className="checkerboard rounded-panel shadow-panel overflow-hidden border border-line relative"
-      style={{ width: canvasSize.width, height: canvasSize.height }}
+      style={{ width: canvasSize.width * scale, height: canvasSize.height * scale, touchAction: 'none' }}
     >
       <Stage
         ref={stageRef}
-        width={canvasSize.width}
-        height={canvasSize.height}
+        width={canvasSize.width * scale}
+        height={canvasSize.height * scale}
+        scaleX={scale}
+        scaleY={scale}
         onPointerDown={(e) => {
           const stage = e.target.getStage()
           if (activeTool === 'text' && e.target === stage && stage) {
-            const pos = stage.getPointerPosition()
+            const pos = stage.getRelativePointerPosition()
             if (!pos) return
             commit()
             const id = newId()
@@ -165,9 +172,9 @@ export function CanvasStage({ stageRef }: Props) {
           }}
           style={{
             position: 'absolute',
-            left: editing.x,
-            top: editing.y,
-            fontSize: style.fontSize,
+            left: editing.x * scale,
+            top: editing.y * scale,
+            fontSize: style.fontSize * scale,
             color: style.stroke,
             lineHeight: 1.2,
             minWidth: 80,

@@ -2,17 +2,19 @@ import Konva from 'konva'
 
 function stageToBlob(stage: Konva.Stage, mimeType: 'image/png' | 'image/jpeg'): Promise<Blob> {
   return new Promise((resolve, reject) => {
+    // The on-screen stage may be scaled down to fit; export at the canvas' real size.
+    const scale = stage.scaleX()
     let bgLayer: Konva.Layer | null = null
     if (mimeType === 'image/jpeg') {
       bgLayer = new Konva.Layer()
       bgLayer.add(
-        new Konva.Rect({ x: 0, y: 0, width: stage.width(), height: stage.height(), fill: 'white' }),
+        new Konva.Rect({ x: 0, y: 0, width: stage.width() / scale, height: stage.height() / scale, fill: 'white' }),
       )
       stage.add(bgLayer)
       bgLayer.moveToBottom()
     }
 
-    stage.toCanvas({ pixelRatio: 2 }).toBlob((blob) => {
+    stage.toCanvas({ pixelRatio: 2 / scale }).toBlob((blob) => {
       bgLayer?.destroy()
       stage.batchDraw()
       if (blob) resolve(blob)
