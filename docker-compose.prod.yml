@@ -1,0 +1,7 @@
+services:
+  web:
+    image: ${LUKIS_IMAGE:-ghcr.io/gewall/lukis:latest}
+    pull_policy: always
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${APP_PORT:-8091}:80"
